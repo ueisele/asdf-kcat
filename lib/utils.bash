@@ -94,6 +94,7 @@ install_version() {
 
 		docker build -t asdf-kcat-build \
 			-v "$(realpath "${ASDF_DOWNLOAD_PATH}")":/usr/src/kcat:z \
+			--build-arg BUILD_TIMESTAMP="$(date --iso-8601=seconds)" \
 			--build-arg LIBRDKAFKA_VERSION="v${librdkafka_version}" \
 			-f "${plugin_dir}/docker/Dockerfile" "${plugin_dir}/docker"
 

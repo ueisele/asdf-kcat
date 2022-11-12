@@ -10,6 +10,9 @@ RUN dnf groupinstall -y "Development Tools" "Development Libraries" \
 
 WORKDIR /usr/src/kcat
 
+# argument BUILD_TIMESTAMP is used to disable caching of build step
+ARG BUILD_TIMESTAMP=0
+
 ARG LIBRDKAFKA_VERSION=v1.9.2
 RUN LIBRDKAFKA_VERSION=${LIBRDKAFKA_VERSION} ./bootstrap.sh; result=$?; \
   chmod -R o=rwX ./tmp-bootstrap; \
