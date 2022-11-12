@@ -16,11 +16,8 @@
 
 # Dependencies
 
-**TODO: adapt this section**
-
 - `bash`, `curl`, `tar`, `realpath`, generic POSIX utilities.
-- `docker` or `podman`
-- `SOME_ENV_VAR`: set this environment variable in your shell config to load the correct version of tool x.
+- `docker`
 
 # Install
 
@@ -33,7 +30,7 @@ asdf plugin add kcat https://github.com/ueisele/asdf-kcat.git
 kcat:
 
 ```bash
-# Show all installable versions
+# Show all installable versions in format <kcat-version>-<librdkafka-version>
 asdf list-all kcat
 
 # Install specific version
@@ -54,6 +51,9 @@ install & manage versions.
 Contributions of any kind welcome! See the [contributing guide](contributing.md).
 
 [Thanks goes to these contributors](https://github.com/ueisele/asdf-kcat/graphs/contributors)!
+
+This repository is based on the [asdf-plugin-template](https://github.com/asdf-vm/asdf-plugin-template). 
+[Thanks to it's contributors](https://github.com/asdf-vm/asdf-plugin-template/graphs/contributors). 
 
 # License
 

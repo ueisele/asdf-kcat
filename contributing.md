@@ -18,8 +18,8 @@ Testing locally with scrips:
 
 ```bash
 bin/list-all
-test/test-download.sh 1.7.1 # executes bin/download
-test/test-install.sh 1.7.1 # executes bin/install
+test/test-download.sh 1.7.1-1.9.2 # executes bin/download
+test/test-install.sh 1.7.1-1.9.2 # executes bin/install
 ```
 
 Testing locally with asdf:
@@ -28,7 +28,7 @@ Testing locally with asdf:
 asdf plugin test kafka https://github.com/ueisele/asdf-kcat.git \
   --asdf-plugin-gitref main \
   --asdf-tool-version latest \
-  'kcat -h || kafkacat -h'
+  'kcat -h'
 ```
 
 Tests are automatically run in GitHub Actions on push and PR.
