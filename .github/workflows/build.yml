@@ -14,9 +14,20 @@ jobs:
         os:
           - ubuntu-latest
           - macos-latest
+        version:
+          - latest
+          - 1.7.1-1.9.2
+          - 1.7.1-1.8.2
+          - 1.7.1-1.7.0
+          - 1.7.1-1.6.2
+          - 1.6.0-1.9.2
+          - 1.6.0-1.6.2
+          - 1.5.0-1.9.2
+          - 1.5.0-1.6.0
     runs-on: ${{ matrix.os }}
     steps:
       - name: asdf_plugin_test
         uses: asdf-vm/actions/plugin-test@v1
         with:
-          command: <TOOL CHECK>
+          version: ${{ matrix.version }}
+          command: kcat -h
