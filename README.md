@@ -17,7 +17,7 @@
 # Dependencies
 
 - `bash`, `curl`, `tar`, `realpath`, generic POSIX utilities.
-- `docker`
+- `podman`
 
 # Install
 

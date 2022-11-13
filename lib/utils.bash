@@ -92,11 +92,11 @@ install_version() {
 	(
 		echo "* Installing $TOOL_NAME release $version..."
 
-		docker build -t asdf-kcat-build \
+		podman build -t asdf-kcat-build \
 			-v "$(realpath "${ASDF_DOWNLOAD_PATH}")":/usr/src/kcat:z \
 			--build-arg BUILD_TIMESTAMP="$(date --iso-8601=seconds)" \
 			--build-arg LIBRDKAFKA_VERSION="v${librdkafka_version}" \
-			-f "${plugin_dir}/docker/Dockerfile" "${plugin_dir}/docker"
+			-f "${plugin_dir}/container/Containerfile" "${plugin_dir}/container"
 
 		local tool_cmd
 		tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
