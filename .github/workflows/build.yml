@@ -12,15 +12,16 @@ jobs:
     strategy:
       matrix:
         version:
-          - latest
-          - 1.7.1-1.9.2
-          - 1.7.1-1.8.2
-          - 1.7.1-1.7.0
-          - 1.7.1-1.6.2
-          - 1.6.0-1.9.2
-          - 1.6.0-1.6.2
-          - 1.5.0-1.9.2
-          - 1.5.0-1.6.0
+          - latest:1.8
+          - 1.8.2-1.7.1
+          - 1.7.0-1.7.1
+          - 1.6.2-1.7.1
+          - 1.8.2-1.6.0
+          - 1.7.0-1.6.0
+          - 1.6.2-1.6.0
+          - 1.8.2-1.5.0
+          - 1.7.0-1.5.0
+          - 1.6.2-1.5.0
     runs-on: ubuntu-22.04
     steps:
       - name: Install Podman
@@ -29,7 +30,7 @@ jobs:
           mkdir -p ~/.config/containers/
           echo 'unqualified-search-registries = ["docker.io"]' > ~/.config/containers/registries.conf
       - name: Install kcat runtime dependencies
-        run: sudo apt-get install -y libssl1.1 libssl-dev libsasl2-2
+        run: sudo apt-get install -y libsasl2-2 curl
       - name: asdf_plugin_test
         uses: asdf-vm/actions/plugin-test@v1
         with:

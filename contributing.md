@@ -18,8 +18,8 @@ Testing locally with scrips:
 
 ```bash
 bin/list-all
-test/test-download.sh 1.7.1-1.9.2 # executes bin/download
-test/test-install.sh 1.7.1-1.9.2 # executes bin/install
+test/test-download.sh 1.9.2-1.7.1 # executes bin/download
+test/test-install.sh 1.9.2-1.7.1 # executes bin/install
 ```
 
 Testing locally with asdf:

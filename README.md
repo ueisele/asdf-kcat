@@ -16,10 +16,22 @@
 
 # Dependencies
 
-At the moment, only `Fedora 37` is tested. It is not guaranteed to work on other versions and distributions.
+## Operating System
+
+At the moment, `Fedora` and `Ubuntu` are supported.
+
+- `Fedora` has been tested with librdkafka <= 1.9.2.
+- `Ubuntu` has been tested with librdkafka <= 1.8.2. Librdkafka 1.9 cannot be compiled at the moment on `Ubuntu`.
+
+## Installation
 
 - `bash`, `curl`, `tar`, `realpath`, generic POSIX utilities.
 - `podman`
+
+## Runtime
+
+- Fedora: -
+- Ubuntu: `libsasl2-2`, `curl`
 
 # Install
 
@@ -32,11 +44,17 @@ asdf plugin add kcat https://github.com/ueisele/asdf-kcat.git
 kcat:
 
 ```bash
-# Show all installable versions in format <kcat-version>-<librdkafka-version>
+# Show all installable versions in format <librdkafka-version>-<kcat-version>
 asdf list-all kcat
 
-# Install specific version
+# Show all installable versions with specific librdkafka version
+asdf list-all kcat latest:1.8
+
+# Install latest version
 asdf install kcat latest
+
+# Install latest version of specific librdkafka version
+asdf install kcat latest:1.8
 
 # Set a version globally (on your ~/.tool-versions file)
 asdf global kcat latest

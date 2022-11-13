@@ -1,0 +1,21 @@
+ARG OS_VERSION=37
+FROM fedora:${OS_VERSION}
+
+RUN dnf groupinstall -y "Development Tools" "Development Libraries"
+RUN dnf install -y \
+      which curl wget python3 \
+      cmake pkg-config gcc-c++ libtool \
+      openssl-devel cyrus-sasl-lib cyrus-sasl-devel libssh-devel \
+      brotli-devel libidn2-devel libnghttp2-devel curl-devel libpsl-devel \
+      lz4-devel snappy-devel libzstd-devel
+
+WORKDIR /usr/src/kcat
+
+# argument BUILD_TIMESTAMP is used to disable caching of build step
+ARG BUILD_TIMESTAMP=0
+
+ARG LIBRDKAFKA_VERSION=v1.9.2
+RUN LIBRDKAFKA_VERSION=${LIBRDKAFKA_VERSION} ./bootstrap.sh; result=$?; \
+  chmod -R o=rwX ./tmp-bootstrap; \
+  bash -c "if [ $result -ne 0 ]; then false; fi"
+RUN bash -c "if [ -f kafkacat ]; then cp kafkacat kcat; fi"

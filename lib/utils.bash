@@ -59,9 +59,9 @@ filter_tool_versions() {
 }
 
 list_all_versions() {
-	for tool_version in $(list_tool_github_tags | filter_tool_versions); do
-		for librdkafka_version in $(list_librdkafka_github_tags | filter_librdkafka_versions); do
-			echo "${tool_version}-${librdkafka_version}"
+	for librdkafka_version in $(list_librdkafka_github_tags | filter_librdkafka_versions); do
+		for tool_version in $(list_tool_github_tags | filter_tool_versions); do
+			echo "${librdkafka_version}-${tool_version}"
 		done
 	done
 }
@@ -71,7 +71,7 @@ download_release() {
 	version="$1"
 	filename="$2"
 
-	tool_version="${version%-*}"
+	tool_version="${version#*-}"
 
 	url="$GH_REPO/archive/${tool_version}.tar.gz"
 
@@ -79,24 +79,45 @@ download_release() {
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
 }
 
+determine_os_id() {
+	[[ -e /etc/os-release ]] && (
+		source /etc/os-release
+		echo ${ID}
+	) || echo "unknown"
+}
+
+determine_os_version() {
+	[[ -e /etc/os-release ]] && (
+		source /etc/os-release
+		echo ${VERSION_ID}
+	) || echo "unknown"
+}
+
 install_version() {
 	local install_type="$1"
 	local version="$2"
 	local install_path="${3%/bin}/bin"
-	local librdkafka_version="${version#*-}"
+	local librdkafka_version="${version%-*}"
 
 	if [ "$install_type" != "version" ]; then
 		fail "asdf-$TOOL_NAME supports release installs only"
 	fi
 
+	local os_id="${ASDF_KCAT_BUILD_OS_ID:-"$(determine_os_id)"}"
+	local os_version="${ASDF_KCAT_BUILD_OS_VERSION:-"$(determine_os_version)"}"
+	if [ ! -e "${plugin_dir}/container/Containerfile.${os_id}" ]; then
+		fail "asdf-$TOOL_NAME does not support ${os_id} as operating system"
+	fi
+
 	(
 		echo "* Installing $TOOL_NAME release $version..."
 
-		podman build -t asdf-kcat-build \
+		podman build -t asdf-kcat-build:${os_id}${os_version} \
 			-v "$(realpath "${ASDF_DOWNLOAD_PATH}")":/usr/src/kcat:z \
+			--build-arg OS_VERSION="${os_version}" \
 			--build-arg BUILD_TIMESTAMP="$(date --iso-8601=seconds)" \
 			--build-arg LIBRDKAFKA_VERSION="v${librdkafka_version}" \
-			-f "${plugin_dir}/container/Containerfile" "${plugin_dir}/container"
+			-f "${plugin_dir}/container/Containerfile.${os_id}" "${plugin_dir}/container"
 
 		local tool_cmd
 		tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
