@@ -28,6 +28,8 @@ jobs:
           sudo apt-get install -y podman
           mkdir -p ~/.config/containers/
           echo 'unqualified-search-registries = ["docker.io"]' > ~/.config/containers/registries.conf
+      - name: Install kcat runtime dependencies
+        run: sudo apt-get install -y libssl1.1 libssl-dev libsasl2-2
       - name: asdf_plugin_test
         uses: asdf-vm/actions/plugin-test@v1
         with:
