@@ -1,14 +1,12 @@
-ARG OS_VERSION=37
-FROM fedora:${OS_VERSION}
+ARG OS_VERSION="8.6"
+FROM redhat/ubi8-minimal:${OS_VERSION}
 
-RUN dnf update -y
-RUN dnf groupinstall -y "Development Tools" "Development Libraries"
-RUN dnf install -y \
+RUN microdnf update -y
+RUN microdnf install -y \
       which curl wget python3 \
       cmake pkg-config gcc-c++ libtool \
       openssl-devel cyrus-sasl-lib cyrus-sasl-devel libssh-devel \
-      brotli-devel libidn2-devel libnghttp2-devel curl-devel libpsl-devel \
-      lz4-devel snappy-devel libzstd-devel
+      brotli-devel libnghttp2-devel curl-devel lz4-devel
 
 WORKDIR /usr/src/kcat
 

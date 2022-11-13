@@ -18,10 +18,11 @@
 
 ## Operating System
 
-At the moment, `Fedora` and `Ubuntu` are supported.
+At the moment, `Fedora`, `Red Hat Enterprise Linux 8`, and `Ubuntu` are supported.
 
-- `Fedora` has been tested with librdkafka <= 1.9.2.
-- `Ubuntu` has been tested with librdkafka <= 1.8.2. Librdkafka 1.9 cannot be compiled at the moment on `Ubuntu`.
+- `Fedora` (>= 35 and <= 38) has been tested with librdkafka <= 1.9.2.
+- `Red Hat Enterprise Linux 8` (>= 8.1 and <= 8.6) has been tested with librdkafka <= 1.9.2.
+- `Ubuntu` (>= 20.04 and <= 22.10) has been tested with librdkafka <= 1.8.2. Librdkafka 1.9 cannot be compiled on `Ubuntu` at the moment.
 
 ## Installation
 
@@ -31,6 +32,7 @@ At the moment, `Fedora` and `Ubuntu` are supported.
 ## Runtime
 
 - Fedora: -
+- Red Hat Enterprise Linux 8: -
 - Ubuntu: `libsasl2-2`, `curl`
 
 # Install

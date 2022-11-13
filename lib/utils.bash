@@ -105,8 +105,15 @@ install_version() {
 
 	local os_id="${ASDF_KCAT_BUILD_OS_ID:-"$(determine_os_id)"}"
 	local os_version="${ASDF_KCAT_BUILD_OS_VERSION:-"$(determine_os_version)"}"
-	if [ ! -e "${plugin_dir}/container/Containerfile.${os_id}" ]; then
-		fail "asdf-$TOOL_NAME does not support ${os_id} as operating system"
+	local containerfile
+	if [ -e "${plugin_dir}/container/Containerfile.${os_id}.${os_version}" ]; then
+		containerfile="${plugin_dir}/container/Containerfile.${os_id}.${os_version}"
+	elif [ -e "${plugin_dir}/container/Containerfile.${os_id}.${os_version%.*}" ]; then
+		containerfile="${plugin_dir}/container/Containerfile.${os_id}.${os_version%.*}"
+	elif [ -e "${plugin_dir}/container/Containerfile.${os_id}" ]; then
+		containerfile="${plugin_dir}/container/Containerfile.${os_id}"
+	else
+		fail "asdf-$TOOL_NAME does not support ${os_id}:${os_version} as operating system"
 	fi
 
 	(
@@ -117,7 +124,7 @@ install_version() {
 			--build-arg OS_VERSION="${os_version}" \
 			--build-arg BUILD_TIMESTAMP="$(date --iso-8601=seconds)" \
 			--build-arg LIBRDKAFKA_VERSION="v${librdkafka_version}" \
-			-f "${plugin_dir}/container/Containerfile.${os_id}" "${plugin_dir}/container"
+			-f "${containerfile}" "${plugin_dir}/container"
 
 		local tool_cmd
 		tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
