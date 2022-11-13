@@ -16,6 +16,8 @@
 
 # Dependencies
 
+At the moment, only `Fedora 37` is tested. It is not guaranteed to work on other versions and distributions.
+
 - `bash`, `curl`, `tar`, `realpath`, generic POSIX utilities.
 - `podman`
 
