@@ -5,7 +5,7 @@ RUN dnf update -y
 RUN dnf install -y \
       which curl wget python3 \
       cmake pkg-config gcc-c++ libtool \
-      openssl-devel cyrus-sasl-lib cyrus-sasl-devel libssh-devel \
+      openssl-devel openssl-devel-engine cyrus-sasl-lib cyrus-sasl-devel libssh-devel \
       brotli-devel libidn2-devel libnghttp2-devel curl-devel libpsl-devel \
       lz4-devel snappy-devel libzstd-devel
 
