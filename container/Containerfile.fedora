@@ -2,7 +2,6 @@ ARG OS_VERSION=37
 FROM fedora:${OS_VERSION}
 
 RUN dnf update -y
-RUN dnf groupinstall -y "Development Tools" "Development Libraries"
 RUN dnf install -y \
       which curl wget python3 \
       cmake pkg-config gcc-c++ libtool \
