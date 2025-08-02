@@ -1,0 +1,36 @@
+--- bootstrap.sh.orig	2025-08-02 13:47:53.237092608 +0200
++++ bootstrap.sh	2025-08-02 13:40:55.580139157 +0200
+@@ -129,9 +129,9 @@
+ export DEST="$PWD/usr"
+ export CFLAGS="-I$DEST/include"
+ if [[ $(uname -s) == Linux ]]; then
+-    export LDFLAGS="-L$DEST/lib -Wl,-rpath-link=$DEST/lib"
++    export LDFLAGS="-L$DEST/lib -L$DEST/lib64 -Wl,-rpath-link=$DEST/lib -Wl,-rpath-link=$DEST/lib64"
+ else
+-    export LDFLAGS="-L$DEST/lib"
++    export LDFLAGS="-L$DEST/lib -L$DEST/lib64"
+ fi
+ export PKG_CONFIG_PATH="$DEST/lib/pkgconfig"
+ 
+@@ -144,18 +144,18 @@
+ download http://www.digip.org/jansson/releases/jansson-2.12.tar.gz libjansson
+ build libjansson "([[ -f config.status ]] || ./configure --enable-static --prefix=$DEST) && make && make install" || (echo "Failed to build libjansson: AVRO support will probably be disabled" ; true)
+ 
+-github_download "apache/avro" "release-1.8.2" "avroc"
++github_download "apache/avro" "release-1.12.0" "avroc"
+ build avroc "cd lang/c && mkdir -p build && cd build && cmake -DCMAKE_C_FLAGS=\"$CFLAGS\" -DCMAKE_INSTALL_PREFIX=$DEST .. && make install" || (echo "Failed to build Avro C: AVRO support will probably be disabled" ; true)
+ 
+ github_download "confluentinc/libserdes" "master" "libserdes"
+-build libserdes "([ -f config.h ] || ./configure  --prefix=$DEST --CFLAGS=-I${DEST}/include --LDFLAGS=-L${DEST}/lib) && make && make install" || (echo "Failed to build libserdes: AVRO support will probably be disabled" ; true)
++build libserdes "([ -f config.h ] || ./configure  --prefix=$DEST --CFLAGS=-I${DEST}/include --LDFLAGS=\"-L${DEST}/lib -L${DEST}/lib64\") && make && make install" || (echo "Failed to build libserdes: AVRO support will probably be disabled" ; true)
+ 
+ popd > /dev/null
+ 
+ echo "Building kcat"
+ ./configure --clean
+ export CPPFLAGS="${CPPFLAGS:-} -I$DEST/include"
+-export STATIC_LIB_avro="$DEST/lib/libavro.a"
++export STATIC_LIB_avro="$DEST/lib64/libavro.a"
+ export STATIC_LIB_rdkafka="$DEST/lib/librdkafka.a"
+ export STATIC_LIB_serdes="$DEST/lib/libserdes.a"
+ export STATIC_LIB_yajl="$DEST/lib/libyajl_s.a"

@@ -1,9 +1,9 @@
-ARG OS_VERSION=37
+ARG OS_VERSION=42
 FROM fedora:${OS_VERSION}
 
 RUN dnf update -y
 RUN dnf install -y \
-      which curl wget python3 \
+      which curl wget python3 patch \
       cmake pkg-config gcc-c++ libtool \
       openssl-devel openssl-devel-engine cyrus-sasl-lib cyrus-sasl-devel libssh-devel \
       brotli-devel libidn2-devel libnghttp2-devel curl-devel libpsl-devel libunistring-devel \
@@ -11,11 +11,16 @@ RUN dnf install -y \
 
 WORKDIR /usr/src/kcat
 
+# Copy the patch file for bootstrap.sh
+COPY bootstrap-avro-1.12.0.patch /tmp/
+
 # argument BUILD_TIMESTAMP is used to disable caching of build step
 ARG BUILD_TIMESTAMP=0
 
-ARG LIBRDKAFKA_VERSION=v1.9.2
-RUN LIBRDKAFKA_VERSION=${LIBRDKAFKA_VERSION} ./bootstrap.sh; result=$?; \
+ARG LIBRDKAFKA_VERSION=v2.11.0
+# Apply the patch to bootstrap.sh to fix Avro compatibility with GCC 15
+RUN patch -p0 < /tmp/bootstrap-avro-1.12.0.patch && \
+  LIBRDKAFKA_VERSION=${LIBRDKAFKA_VERSION} ./bootstrap.sh; result=$?; \
   chmod -R o=rwX ./tmp-bootstrap; \
   bash -c "if [ $result -ne 0 ]; then false; fi"
 RUN bash -c "if [ -f kafkacat ]; then cp kafkacat kcat; fi"
