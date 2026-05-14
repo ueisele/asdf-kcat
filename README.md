@@ -18,11 +18,10 @@
 
 ## Operating System
 
-At the moment, `Fedora`, `Red Hat Enterprise Linux 8`, and `Ubuntu` are supported.
+At the moment, the container build is maintained for `Fedora`.
 
-- `Fedora` (>= 35 and <= 38) has been tested with librdkafka <= 1.9.2.
-- `Red Hat Enterprise Linux 8` (>= 8.1 and <= 8.6) has been tested with librdkafka <= 1.9.2.
-- `Ubuntu` (>= 20.04 and <= 22.10) has been tested with librdkafka <= 1.8.2. Librdkafka 1.9 cannot be compiled on `Ubuntu` at the moment.
+- `Fedora 44` has been tested with `librdkafka 2.14.1` and `kcat 1.7.1`.
+- Older Fedora, Red Hat Enterprise Linux, and Ubuntu combinations may work, but are not covered by the current CI build.
 
 ## Installation
 
@@ -31,9 +30,11 @@ At the moment, `Fedora`, `Red Hat Enterprise Linux 8`, and `Ubuntu` are supporte
 
 ## Runtime
 
-- Fedora: -
-- Red Hat Enterprise Linux 8: -
-- Ubuntu: `libsasl2-2`, `curl`
+The binary is built in a Fedora container and copied to the host. It is not fully
+static, so the host needs compatible Fedora runtime libraries.
+
+- Fedora: `cyrus-sasl-lib`, `curl`, and their runtime dependencies.
+- Other operating systems: not currently tested.
 
 # Install
 
@@ -50,13 +51,13 @@ kcat:
 asdf list-all kcat
 
 # Show all installable versions with specific librdkafka version
-asdf list-all kcat latest:1.8
+asdf list-all kcat latest:2.14
 
 # Install latest version
 asdf install kcat latest
 
 # Install latest version of specific librdkafka version
-asdf install kcat latest:1.8
+asdf install kcat latest:2.14
 
 # Set a version globally (on your ~/.tool-versions file)
 asdf global kcat latest

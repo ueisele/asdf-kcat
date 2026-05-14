@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+### Features
+
+* support Fedora 44 builds with librdkafka 2.14.1 and kcat 1.7.1
+* build Avro C from Apache Avro 1.12.1
+
+### Bug Fixes
+
+* replace the Avro-only bootstrap patch with a general compatibility patch for current Fedora toolchains
+* patch vendored yajl and libserdes bootstrap dependencies for newer CMake and GCC/libc behavior
+* reduce CI to the current tested kcat/librdkafka build on Ubuntu 24.04
+* update README support and install examples for the Fedora 44 build
+
 ## 1.0.0 (2022-11-13)
 
 

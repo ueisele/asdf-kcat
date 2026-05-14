@@ -1,4 +1,4 @@
-ARG OS_VERSION=42
+ARG OS_VERSION=44
 FROM fedora:${OS_VERSION}
 
 RUN dnf update -y
@@ -11,15 +11,16 @@ RUN dnf install -y \
 
 WORKDIR /usr/src/kcat
 
-# Copy the patch file for bootstrap.sh
-COPY bootstrap-avro-1.12.0.patch /tmp/
+# Copy the compatibility patch for bootstrap.sh
+COPY bootstrap-compat.patch /tmp/
 
 # argument BUILD_TIMESTAMP is used to disable caching of build step
 ARG BUILD_TIMESTAMP=0
 
-ARG LIBRDKAFKA_VERSION=v2.11.0
-# Apply the patch to bootstrap.sh to fix Avro compatibility with GCC 15
-RUN patch -p0 < /tmp/bootstrap-avro-1.12.0.patch && \
+ARG LIBRDKAFKA_VERSION=v2.14.1
+# Apply bootstrap fixes for current Fedora toolchains
+RUN patch -p0 < /tmp/bootstrap-compat.patch && \
+  export CMAKE_POLICY_VERSION_MINIMUM=3.5 && \
   LIBRDKAFKA_VERSION=${LIBRDKAFKA_VERSION} ./bootstrap.sh; result=$?; \
   chmod -R o=rwX ./tmp-bootstrap; \
   bash -c "if [ $result -ne 0 ]; then false; fi"

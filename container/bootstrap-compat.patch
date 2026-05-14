@@ -1,5 +1,5 @@
---- bootstrap.sh.orig	2025-08-02 13:47:53.237092608 +0200
-+++ bootstrap.sh	2025-08-02 13:40:55.580139157 +0200
+--- bootstrap.sh.orig	2022-01-19 09:23:13.000000000 +0100
++++ bootstrap.sh	2026-05-14 16:44:57.381162471 +0200
 @@ -129,9 +129,9 @@
  export DEST="$PWD/usr"
  export CFLAGS="-I$DEST/include"
@@ -12,17 +12,24 @@
  fi
  export PKG_CONFIG_PATH="$DEST/lib/pkgconfig"
  
-@@ -144,18 +144,18 @@
+@@ -139,23 +139,25 @@
+ build librdkafka "([ -f config.h ] || ./configure --prefix=$DEST $lrk_install_deps $lrk_static --disable-lz4-ext) && make -j && make install" || (echo "Failed to build librdkafka: bootstrap failed" ; false)
+ 
+ github_download "edenhill/yajl" "edenhill" "libyajl"
++sed -i -e 's/cmake -DCMAKE_INSTALL_PREFIX="$prefix" ../cmake -DCMAKE_INSTALL_PREFIX="$prefix" -DCMAKE_POLICY_VERSION_MINIMUM=3.5 ../' -e 's/GET_TARGET_PROPERTY(binPath json_reformat LOCATION)/SET(binPath $<TARGET_FILE:json_reformat>)/' -e 's/GET_TARGET_PROPERTY(binPath json_verify LOCATION)/SET(binPath $<TARGET_FILE:json_verify>)/' libyajl/configure libyajl/reformatter/CMakeLists.txt libyajl/verify/CMakeLists.txt
+ build libyajl "([ -d build ] || ./configure --prefix $DEST) && make install" || (echo "Failed to build libyajl: JSON support will probably be disabled" ; true)
+ 
  download http://www.digip.org/jansson/releases/jansson-2.12.tar.gz libjansson
  build libjansson "([[ -f config.status ]] || ./configure --enable-static --prefix=$DEST) && make && make install" || (echo "Failed to build libjansson: AVRO support will probably be disabled" ; true)
  
 -github_download "apache/avro" "release-1.8.2" "avroc"
-+github_download "apache/avro" "release-1.12.0" "avroc"
++github_download "apache/avro" "release-1.12.1" "avroc"
  build avroc "cd lang/c && mkdir -p build && cd build && cmake -DCMAKE_C_FLAGS=\"$CFLAGS\" -DCMAKE_INSTALL_PREFIX=$DEST .. && make install" || (echo "Failed to build Avro C: AVRO support will probably be disabled" ; true)
  
  github_download "confluentinc/libserdes" "master" "libserdes"
++sed -i -e 's/\<once_flag\>/tthread_once_flag/g' -e 's/\<call_once\>/tthread_call_once/g' libserdes/src/tinycthread.h libserdes/src/tinycthread.c libserdes/src/rest.c
 -build libserdes "([ -f config.h ] || ./configure  --prefix=$DEST --CFLAGS=-I${DEST}/include --LDFLAGS=-L${DEST}/lib) && make && make install" || (echo "Failed to build libserdes: AVRO support will probably be disabled" ; true)
-+build libserdes "([ -f config.h ] || ./configure  --prefix=$DEST --CFLAGS=-I${DEST}/include --LDFLAGS=\"-L${DEST}/lib -L${DEST}/lib64\") && make && make install" || (echo "Failed to build libserdes: AVRO support will probably be disabled" ; true)
++build libserdes "([ -f config.h ] || ./configure  --prefix=$DEST --CFLAGS=\"-std=gnu17 -I${DEST}/include\" --LDFLAGS=\"-L${DEST}/lib -L${DEST}/lib64\") && make && make install" || (echo "Failed to build libserdes: AVRO support will probably be disabled" ; true)
  
  popd > /dev/null
  
