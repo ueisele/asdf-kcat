@@ -15,6 +15,9 @@ jobs:
           - 2.14.1-1.7.1
     runs-on: ubuntu-24.04
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Install Podman
         run: |
           sudo apt-get install -y podman
@@ -23,7 +26,7 @@ jobs:
       - name: Install kcat runtime dependencies
         run: sudo apt-get install -y libsasl2-2 curl
       - name: asdf_plugin_test
-        uses: asdf-vm/actions/plugin-test@v1
+        uses: asdf-vm/actions/plugin-test@v4
         with:
           version: ${{ matrix.version }}
           command: kcat -h
